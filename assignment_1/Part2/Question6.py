@@ -26,12 +26,17 @@ for student in students:
 gpa_list_student = list(map(lambda item: str(
     sum(list(map(lambda sub: sub[1], students[item])))), students))
 
-st_number = [1]
+student_list = list(map(lambda gpa: gpa, students))
+st_number = [0]
 
 
 def print_gpa(gpa):
-    print("(Without Loop) Total GPA of Student", sum(st_number), "is", gpa)
+    print("(Without Loop) Total GPA of Student",
+          student_list[st_number[0]], "is", gpa)
     st_number.append(1)
+    st_number.append(sum(st_number))
+    st_number.pop(0)
+    st_number.pop(0)
 
 
 gpa_list_student = list(
