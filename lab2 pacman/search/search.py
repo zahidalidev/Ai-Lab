@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -17,7 +17,9 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
+from game import Directions  # importing directions
 import util
+
 
 class SearchProblem:
     """
@@ -70,9 +72,33 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
+"""
+def depthFirstSearch(problem):
+    currentState = problem.getStartState()
+    childrens = problem.getSuccessors(currentState)
+    action = getActionFromTriplet(childrens[0])
+    return [action]
+
+"""
+
+# ****************** Challange no 1  *********************
+
+"""
+Pacman is stucking in the loop because pacman receives two consective path 
+again and again like north and south so pacman stucks in these paths 
+(i.e., moving up and down again and again) so to resolve this issue we
+will take record of previously visited states, and will check if pacman have visited 
+the state before or not if pacman has visisted the state then we will give 2nd children (path)
+to packman.
+"""
+
+# ****************** Challange no 2  *********************
 
 def depthFirstSearch(problem):
+
+        
     """
     Search the deepest nodes in the search tree first.
 
@@ -87,17 +113,80 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    currentState = problem.getStartState() # getting current state of pacman
+    actions = [] # actions that pacman will perform
+    prviousStates = []  # to rrecord visited states of pacman
+    maxIteration = 0
+
+    import random
+    while(maxIteration <= 70):
+        children = problem.getSuccessors(currentState) # getting childs like paths (states) avaible at current position of pacman
+
+        childrenNumber = 1
+
+        # if paths available at current state is greater then two then chooose random path to go
+        # if we comment this code under this if condition then code still work greate without stuck 
+        # but will stop or move from his starting state
+        if len(children) >= 3:
+            childrenNumber = random.randint(1, len(children) - 1)
+            print childrenNumber
+
+            firstChild = children[childrenNumber]
+            frstChildState = firstChild[0]
+            if frstChildState not in prviousStates:
+                prviousStates.append(frstChildState)
+                actions.append(getActionFromTriplet(children[childrenNumber]))
+                currentState = frstChildState
+        
+        # if numbers of path is less then 3 then choose path number 0 or 1
+        else:
+            firstChild = children[1]
+            frstChildState = firstChild[0]
+
+            # cheking pacman has visited the state before or not of not 
+            # if not visited using children[1]
+            if frstChildState not in prviousStates: 
+                prviousStates.append(frstChildState)
+                actions.append(getActionFromTriplet(children[1]))
+                currentState = frstChildState
+
+            # if visited using children[0]
+            else:
+                firstChild = children[0]
+                frstChildState = firstChild[0]
+
+                # if children[0] also is not visited
+                if frstChildState not in prviousStates:
+                    prviousStates.append(frstChildState)
+                    actions.append(getActionFromTriplet(children[0]))
+                    currentState = frstChildState
+                
+                # if packman is at the start state again then again starting visited the nodes
+                # if we exclude this below two lines then pacman will stop at his starting position
+                else:
+                    prviousStates = []
+                    
+            maxIteration = maxIteration + 1
+    return actions
+
+    # util.raiseNotDefined()
+
+
+def getActionFromTriplet(triples):
+    return triples[1]
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -106,27 +195,31 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
-from game import Directions  #importing directions
 
 # Question-1
+
+
 def mediumClassicSearch(problem):
-    n = Directions.NORTH # up
-    e = Directions.EAST # right
-    s = Directions.SOUTH # down
-    return  [e, e, e, e, n, n, e, e, s, s, e, e, e]
+    n = Directions.NORTH  # up
+    e = Directions.EAST  # right
+    s = Directions.SOUTH  # down
+    return [e, e, e, e, n, n, e, e, s, s, e, e, e]
 
 # Question-2
+
+
 def mediumMazeSearch(problem):
     # from game import Directions
-    n = Directions.NORTH # up
-    e = Directions.EAST # right
-    s = Directions.SOUTH # down
-    w = Directions.WEST #left
+    n = Directions.NORTH  # up
+    e = Directions.EAST  # right
+    s = Directions.SOUTH  # down
+    w = Directions.WEST  # left
     return [s, s, w, w, w, w, s, s, e, e, e, e, s,
             s, w, w, w, w, s, s, e, e, e, e, s, s,
             w, w, w, w, s, s, e, e, e, e, s, s, s,
@@ -135,12 +228,14 @@ def mediumMazeSearch(problem):
             w, w, w, w, w, w, w, w, w]
 
 # Question-3
+
+
 def bigMazeSearch(problem):
     # from game import Directions
-    n = Directions.NORTH # up
-    e = Directions.EAST # right
-    s = Directions.SOUTH # down
-    w = Directions.WEST #left
+    n = Directions.NORTH  # up
+    e = Directions.EAST  # right
+    s = Directions.SOUTH  # down
+    w = Directions.WEST  # left
     return [n, n, w, w, w, w, n, n, w, w, s, s, w, w,
             w, w, w, w, w, w, w, w, w, w, w, w, n, n,
             e, e, n, n, w, w, n, n, n, n, n, n, e, e,
@@ -156,6 +251,7 @@ def bigMazeSearch(problem):
             w, w, w, w, w, w, s, s, s, s, s, s, s, s,
             s, s, e, e, s, s, s, s, w, w, s, s, s, s,
             e, e, s, s, w, w, s, s, s, s, w, w, s, s]
+
 
 # Abbreviations
 bfs = breadthFirstSearch
