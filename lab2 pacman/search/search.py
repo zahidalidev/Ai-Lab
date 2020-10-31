@@ -83,20 +83,20 @@ def depthFirstSearch(problem):
 
 """
 
-# ****************** Challange no 1  *********************
-
-"""
-Pacman is stucking in the loop because pacman receives two consective path 
-again and again like north and south so pacman stucks in these paths 
-(i.e., moving up and down again and again) so to resolve this issue we need to modify 
-the code where we are getting state for this we will take record of previously visited states, 
-and will check if pacman have visited the state before or not if pacman has visisted the state 
-then we will give 2nd children (path) to packman.
-"""
-
-# ****************** Challange no 2  *********************
-
 def depthFirstSearch(problem):
+
+    # ****************** Challange no 1  *********************
+
+    """
+    Pacman is stucking in the loop because pacman receives two consective path 
+    again and again like north and south so pacman stucks in these paths 
+    (i.e., moving up and down again and again) so to resolve this issue we need to modify 
+    the code where we are getting state for this we will take record of previously visited states, 
+    and will check if pacman have visited the state before or not if pacman has visisted the state 
+    then we will give 2nd children (path) to packman.
+    """
+
+    # ****************** Challange no 2  *********************
 
         
     """
@@ -166,10 +166,33 @@ def depthFirstSearch(problem):
                 else:
                     prviousStates = []
                     
-            maxIteration = maxIteration + 1
+        maxIteration = maxIteration + 1
     return actions
 
-    # util.raiseNotDefined()
+
+# ****************** Challange no 3  *********************
+
+def DFS(problem):
+    frontier = util.Stack() # stack from util
+    explored = set()
+    startState = problem.getStartState() # start state from problem
+    frontier.push((startState, [])) # pushing start state and empty backet for path
+
+    while not frontier.isEmpty():
+        path = frontier.pop()  # getting path 
+        state = path[0]
+        action = path[1]
+
+        if problem.isGoalState(state):  # if state is our goal state then return
+            return action
+
+        if state not in explored:
+            explored.add(state)  # if state is not explored before then add into explored
+            
+            for neighbor in problem.getSuccessors(state):
+                if neighbor[0] not in explored:
+                    action2 = action + [neighbor[1]]
+                    frontier.push((neighbor[0], action2))
 
 
 def getActionFromTriplet(triples):
