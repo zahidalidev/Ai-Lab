@@ -88,10 +88,10 @@ def depthFirstSearch(problem):
 """
 Pacman is stucking in the loop because pacman receives two consective path 
 again and again like north and south so pacman stucks in these paths 
-(i.e., moving up and down again and again) so to resolve this issue we
-will take record of previously visited states, and will check if pacman have visited 
-the state before or not if pacman has visisted the state then we will give 2nd children (path)
-to packman.
+(i.e., moving up and down again and again) so to resolve this issue we need to modify 
+the code where we are getting state for this we will take record of previously visited states, 
+and will check if pacman have visited the state before or not if pacman has visisted the state 
+then we will give 2nd children (path) to packman.
 """
 
 # ****************** Challange no 2  *********************
