@@ -200,10 +200,26 @@ def getActionFromTriplet(triples):
 
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.Queue() # stack from util
+    explored = set()
+    startState = problem.getStartState() # start state from problem
+    frontier.push((startState, [])) # pushing start state and empty backet for path
 
+    while not frontier.isEmpty():
+        path = frontier.pop()  # getting path 
+        state = path[0]
+        action = path[1]
+
+        if problem.isGoalState(state):  # if state is our goal state then return
+            return action
+
+        if state not in explored:
+            explored.add(state)  # if state is not explored before then add into explored
+            
+            for neighbor in problem.getSuccessors(state):
+                if neighbor[0] not in explored:
+                    action2 = action + [neighbor[1]]
+                    frontier.push((neighbor[0], action2))
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
