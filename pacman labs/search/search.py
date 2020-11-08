@@ -179,9 +179,7 @@ def depthFirstSearch(problem):
     frontier.push((startState, [])) # pushing start state and empty backet for path
 
     while not frontier.isEmpty():
-        path = frontier.pop()  # getting path 
-        state = path[0]
-        action = path[1]
+        state, action = frontier.pop()  # getting state and action 
 
         if problem.isGoalState(state):  # if state is our goal state then return
             return action
