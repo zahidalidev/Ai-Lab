@@ -205,9 +205,7 @@ def breadthFirstSearch(problem):
     frontier.push((problem.getStartState(), [])) # problem.getStartState() return start state and [] for action
                                                 #pushing into frontier
     while not frontier.isEmpty(): # search until all state scaned
-        path = frontier.pop()  # getting path 
-        state = path[0]
-        action = path[1]
+        state, action = frontier.pop()  # getting state and action 
 
         if problem.isGoalState(state):  # if state is our goal state then return
             return action
