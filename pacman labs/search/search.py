@@ -83,7 +83,7 @@ def depthFirstSearch(problem):
 
 """
 
-def depthFirstSearch(problem):
+def DFS(problem):
 
     # ****************** Challange no 1  *********************
 
@@ -172,7 +172,7 @@ def depthFirstSearch(problem):
 
 # ****************** Challange no 3  *********************
 
-def DFS(problem):
+def depthFirstSearch(problem):
     frontier = util.Stack() # stack from util
     explored = set()
     startState = problem.getStartState() # start state from problem
@@ -200,12 +200,11 @@ def getActionFromTriplet(triples):
 
 
 def breadthFirstSearch(problem):
-    frontier = util.Queue() # stack from util
-    explored = set()
-    startState = problem.getStartState() # start state from problem
-    frontier.push((startState, [])) # pushing start state and empty backet for path
-
-    while not frontier.isEmpty():
+    frontier = util.Queue() # Queue from util
+    explored = set() # for explored
+    frontier.push((problem.getStartState(), [])) # problem.getStartState() return start state and [] for action
+                                                #pushing into frontier
+    while not frontier.isEmpty(): # search until all state scaned
         path = frontier.pop()  # getting path 
         state = path[0]
         action = path[1]
@@ -222,9 +221,25 @@ def breadthFirstSearch(problem):
                     frontier.push((neighbor[0], action2))
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.PriorityQueue() # PriorityQueue from util
+    explored = set() # for explored
+    frontier.push((problem.getStartState(), [], 0), 0) # problem.getStartState() return start state, [] for action and 0 is current cost
+                                                       # pushing into frontier and setting priority to 0
+    while not frontier.isEmpty(): # search until all state scaned
+        state, actions, cost = frontier.pop() # state is currentState and cost mean current cost, Exploring lowest cost node in frontier
+
+        if problem.isGoalState(state):
+            return actions  # return if state is goal state
+       
+        if state not in explored: # Explore current node only if not already explored
+            explored.add(state)  # Add to explored
+
+            for state2, action, stepCost in problem.getSuccessors(state):
+                totalCost = cost + stepCost
+                updated = (state2, actions + [action], totalCost)
+                frontier.push(updated, totalCost)
+
+    # util.raiseNotDefined()
 
 
 def nullHeuristic(state, problem=None):
