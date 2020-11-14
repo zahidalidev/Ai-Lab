@@ -260,72 +260,29 @@ def euclideanHeuristic(position, problem, info=[]):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-
-    # frontier = util.PriorityQueue() # PriorityQueue from util
-    # explored = set() # for explored
-    # frontier.push((problem.getStartState(), [], 0), 0) # problem.getStartState() return start state, [] for action and 0 is current cost
-    #                                                    # pushing into frontier and setting priority to 0
-    # while not frontier.isEmpty(): # search until all state scaned
-    #     state, actions, cost = frontier.pop() # state is currentState and cost mean current cost, Exploring lowest cost node in frontier
-
-    #     if problem.isGoalState(state):
-    #         return actions  # return if state is goal state
-       
-    #     if state not in explored: # Explore current node only if not already explored
-    #         explored.add(state)  # Add to explored
-
-    #         for state2, action, stepCost in problem.getSuccessors(state):
-    #             if state2 not in explored:
-    #                 totalCost = cost + stepCost
-    #                 costH = totalCost + heuristic(state2, problem)
-    #                 updated = (state2, actions + [action], totalCost)
-    #                 frontier.push(updated, costH)
-    # return []
-
+    
     frontier = util.PriorityQueue() # PriorityQueue from util
+    gCost = 0
     explored = set() # for explored
     startState = problem.getStartState()
-
-    frontier.push((startState, [], 0), heuristic(startState, problem)) # problem.getStartState() return start state, [] for action and 0 is current cost
-                                                       # pushing into frontier and setting priority to 0
-    while not frontier.isEmpty(): # search until all state scaned
-        state, actions, cost = frontier.pop() # state is currentState and cost mean current cost, Exploring lowest cost node in frontier
-
-        if problem.isGoalState(state):
-            return actions  # return if state is goal state
-
-        costH = cost + heuristic(state, problem)
+    # hCost = searchAgents.manhattanHeuristic(startState, problem)
+    hCost = searchAgents.euclideanHeuristic(startState, problem)
+    fCost = gCost + hCost
+    frontier.push((startState, []), fCost)
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
 
         if state not in explored: # Explore current node only if not already explored
             explored.add(state)  # Add to explored
 
-            for state2, action, stepCost in problem.getSuccessors(state):
-                totalCost = cost + stepCost
-                newCostH = totalCost + heuristic(state2, problem)
-                updated = (state2, actions + [action], totalCost)
-                frontier.push(updated, newCostH)
+        if problem.isGoalState(state):
+            return actions  # return if state is goal state
 
-    # frontier = util.PriorityQueue() # PriorityQueue from util
-    # gCost = 0
-    # explored = set() # for explored
-    # startState = problem.getStartState()
-    # hCost = searchAgents.manhattanHeuristic(startState, problem)
-    # # hCost = searchAgents.euclideanHeuristic(startState, problem)
-    # fCost = gCost + hCost
-    # frontier.push((startState, []), fCost)
-    # while not frontier.isEmpty():
-    #     state, actions = frontier.pop()
-
-    #     if problem.isGoalState(state):
-    #         return actions  # return if state is goal state
-       
-    #     if state not in explored: # Explore current node only if not already explored
-    #         explored.add(state)  # Add to explored
-
-    #     for state2, action, stepCost in problem.getSuccessors(state):
-    #         if state2 not in explored:
-    #             updated = (state2, actions + [action])
-    #             frontier.push(updated, fCost)
+        for state2, action, stepCost in problem.getSuccessors(state):
+            if state2 not in explored:
+                actionCost = problem.getCostOfActions(actions + [action])
+                updated = actionCost + heuristic(state2, problem) + fCost
+                frontier.push((state2, actions + [action]), updated)
 
 
 
