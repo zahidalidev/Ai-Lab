@@ -19,7 +19,7 @@ Pacman agents (in searchAgents.py).
 
 from game import Directions  # importing directions
 import util
-
+import searchAgents
 
 class SearchProblem:
     """
@@ -245,11 +245,88 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+def manHattanHeuristic(position, problem, info=[]):
+    xy1 = position
+    xy2 = problem.goal
+    return abs(xy1[0]-xy2[0]) + abs(xy1[1]-xy2[1])
+
+def euclideanHeuristic(position, problem, info=[]):
+    xy1 = position
+    xy2 = problem.goal
+    return ((xy1[0] - xy2[0]) ** 2 +  (xy1[1] - xy2[1]) ** 2) ** 0.5
+
+
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # frontier = util.PriorityQueue() # PriorityQueue from util
+    # explored = set() # for explored
+    # frontier.push((problem.getStartState(), [], 0), 0) # problem.getStartState() return start state, [] for action and 0 is current cost
+    #                                                    # pushing into frontier and setting priority to 0
+    # while not frontier.isEmpty(): # search until all state scaned
+    #     state, actions, cost = frontier.pop() # state is currentState and cost mean current cost, Exploring lowest cost node in frontier
+
+    #     if problem.isGoalState(state):
+    #         return actions  # return if state is goal state
+       
+    #     if state not in explored: # Explore current node only if not already explored
+    #         explored.add(state)  # Add to explored
+
+    #         for state2, action, stepCost in problem.getSuccessors(state):
+    #             if state2 not in explored:
+    #                 totalCost = cost + stepCost
+    #                 costH = totalCost + heuristic(state2, problem)
+    #                 updated = (state2, actions + [action], totalCost)
+    #                 frontier.push(updated, costH)
+    # return []
+
+    frontier = util.PriorityQueue() # PriorityQueue from util
+    explored = set() # for explored
+    startState = problem.getStartState()
+
+    frontier.push((startState, [], 0), heuristic(startState, problem)) # problem.getStartState() return start state, [] for action and 0 is current cost
+                                                       # pushing into frontier and setting priority to 0
+    while not frontier.isEmpty(): # search until all state scaned
+        state, actions, cost = frontier.pop() # state is currentState and cost mean current cost, Exploring lowest cost node in frontier
+
+        if problem.isGoalState(state):
+            return actions  # return if state is goal state
+
+        costH = cost + heuristic(state, problem)
+
+        if state not in explored: # Explore current node only if not already explored
+            explored.add(state)  # Add to explored
+
+            for state2, action, stepCost in problem.getSuccessors(state):
+                totalCost = cost + stepCost
+                newCostH = totalCost + heuristic(state2, problem)
+                updated = (state2, actions + [action], totalCost)
+                frontier.push(updated, newCostH)
+
+    # frontier = util.PriorityQueue() # PriorityQueue from util
+    # gCost = 0
+    # explored = set() # for explored
+    # startState = problem.getStartState()
+    # hCost = searchAgents.manhattanHeuristic(startState, problem)
+    # # hCost = searchAgents.euclideanHeuristic(startState, problem)
+    # fCost = gCost + hCost
+    # frontier.push((startState, []), fCost)
+    # while not frontier.isEmpty():
+    #     state, actions = frontier.pop()
+
+    #     if problem.isGoalState(state):
+    #         return actions  # return if state is goal state
+       
+    #     if state not in explored: # Explore current node only if not already explored
+    #         explored.add(state)  # Add to explored
+
+    #     for state2, action, stepCost in problem.getSuccessors(state):
+    #         if state2 not in explored:
+    #             updated = (state2, actions + [action])
+    #             frontier.push(updated, fCost)
+
 
 
 # Question-1
